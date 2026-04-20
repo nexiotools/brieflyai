@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
-const CHECKOUT_URL = "https://YOUR_STORE.lemonsqueezy.com/checkout/buy/YOUR_PRODUCT_ID";
+const CHECKOUT_URL = "https://nexiotools.lemonsqueezy.com/checkout/buy/9bdbb630-0778-4cc8-8c5f-0fd9810fb54f";
 const FREE_LIMIT = 2;
 const STORAGE_KEY = "brieflyai_uses";
 const API_TIMEOUT_MS = 30000; // 30 second timeout
