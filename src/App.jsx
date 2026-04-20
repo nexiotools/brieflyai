@@ -173,7 +173,7 @@ export default function App() {
     const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
