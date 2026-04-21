@@ -38,7 +38,7 @@ Attendees: Marc (CEO), Jess (CFO), Robin (COO)
 
 Q1 revenue came in at €1.2M, slightly below target of €1.3M. CFO flagged cash position is healthy. Two cost-saving measures approved: freeze on external consultants, and office lease renegotiation starting next month.
 
-COO raised operational bottleneck in logistics -- third-party courier delays affecting customer satisfaction. Decision: evaluate alternative couriers by May 15.
+COO raised operational bottleneck in logistics -- third-party courier delays affecting customer satisfaction. Decision: evaluate alternative couriers by May 14.
 
 CEO wants monthly all-hands reinstated starting May. Jess to send calendar invite to full team.`
 ];
