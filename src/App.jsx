@@ -191,7 +191,7 @@ export default function App() {
       setError("Please paste your meeting notes first (at least 30 characters).");
       return;
     }
-    if (isLocked) { setShowPaywall(true); return; }
+    if (isLocked) { setResult(null); setShowPaywall(true); return; }
 
     setError("");
     setLoading(true);
