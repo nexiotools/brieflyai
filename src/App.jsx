@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
-const CHECKOUT_URL = "https://nexiotools.lemonsqueezy.com/checkout/buy/9bdbb630-0778-4cc8-8c5f-0fd9810fb54f";
+const CHECKOUT_URL_STARTER  = "https://nexiotools.lemonsqueezy.com/checkout/buy/9bdbb630-0778-4cc8-8c5f-0fd9810fb54f"; // €15 / 3 months -- replace with correct link
+const CHECKOUT_URL_PRO      = "https://nexiotools.lemonsqueezy.com/checkout/buy/9bdbb630-0778-4cc8-8c5f-0fd9810fb54f"; // €39 / 1 year   -- replace with correct link
+const CHECKOUT_URL_LIFETIME = "https://nexiotools.lemonsqueezy.com/checkout/buy/9bdbb630-0778-4cc8-8c5f-0fd9810fb54f"; // €79 / lifetime -- replace with correct link
 const FREE_LIMIT = 2;
 const STORAGE_KEY = "brieflyai_uses";
-const API_TIMEOUT_MS = 30000; // 30 second timeout
+const API_TIMEOUT_MS = 30000;
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Varied sample notes -- not just tech, represents real audiences
 const SAMPLE_NOTES = [
-  // Sales
   `Quarterly sales review - April 2026
 
 Attendees: Lisa (Sales Manager), Tom (Account Exec), Mira (Marketing)
@@ -20,7 +20,6 @@ Agreed: Tom to follow up on 3 warm leads by Friday. Lisa to propose revised pric
 
 Next QBR scheduled for July.`,
 
-  // HR / People
   `Team onboarding sync - April 2026
 
 Attendees: Yara (HR), Daan (IT), Sophie (Office Manager)
@@ -31,14 +30,13 @@ Buddy system discussed -- Yara to assign buddies by April 24. Onboarding schedul
 
 Open question: remote work policy for first 3 months still unclear, HR director to confirm.`,
 
-  // General business
   `Weekly management update - April 2026
 
 Attendees: Marc (CEO), Jess (CFO), Robin (COO)
 
 Q1 revenue came in at €1.2M, slightly below target of €1.3M. CFO flagged cash position is healthy. Two cost-saving measures approved: freeze on external consultants, and office lease renegotiation starting next month.
 
-COO raised operational bottleneck in logistics -- third-party courier delays affecting customer satisfaction. Decision: evaluate alternative couriers by May 14.
+COO raised operational bottleneck in logistics -- third-party courier delays affecting customer satisfaction. Decision: evaluate alternative couriers by May 15.
 
 CEO wants monthly all-hands reinstated starting May. Jess to send calendar invite to full team.`
 ];
@@ -53,7 +51,7 @@ function PaywallModal({ onClose }) {
     }}>
       <div style={{
         background: "#13131a", border: "1px solid rgba(255,200,80,0.2)",
-        borderRadius: 20, padding: "40px 36px", maxWidth: 420, width: "100%",
+        borderRadius: 20, padding: "40px 36px", maxWidth: 440, width: "100%",
         position: "relative", animation: "slideUp 0.3s ease both",
         boxShadow: "0 0 80px rgba(255,200,80,0.06), 0 24px 60px rgba(0,0,0,0.6)"
       }}>
@@ -76,21 +74,21 @@ function PaywallModal({ onClose }) {
         }}>You've used your 2 free debriefs</h2>
 
         <p style={{ color: "#7a7570", fontSize: 14, fontWeight: 300, lineHeight: 1.7, marginBottom: 24 }}>
-          Unlock unlimited meeting debriefs, action items, and follow-up emails — for less than a coffee per week.
+          One-time payment. No subscription. No surprises.
         </p>
 
-        <div style={{ marginBottom: 28 }}>
+        <div style={{ marginBottom: 24 }}>
           {[
             "Unlimited meeting debriefs",
             "Action items with owner + deadline",
             "Ready-to-send follow-up emails",
             "Works in any language",
             "Works for any type of meeting",
-            "6 months access — one-time payment",
+            "One-time payment — no recurring charges",
           ].map((f, i) => (
             <div key={i} style={{
               display: "flex", alignItems: "center", gap: 10, padding: "7px 0",
-              borderBottom: i < 4 ? "1px solid rgba(255,255,255,0.04)" : "none"
+              borderBottom: i < 5 ? "1px solid rgba(255,255,255,0.04)" : "none"
             }}>
               <span style={{ color: "#ffc850", fontSize: 13 }}>✓</span>
               <span style={{ color: "#c8c4bc", fontSize: 14, fontWeight: 300 }}>{f}</span>
@@ -98,29 +96,60 @@ function PaywallModal({ onClose }) {
           ))}
         </div>
 
-        <div style={{
-          background: "rgba(255,200,80,0.06)", border: "1px solid rgba(255,200,80,0.12)",
-          borderRadius: 10, padding: "14px 16px",
+        {/* Starter -- 3 months */}
+        <a href={CHECKOUT_URL_STARTER} target="_blank" rel="noopener noreferrer" style={{
           display: "flex", justifyContent: "space-between", alignItems: "center",
-          marginBottom: 16
+          background: "transparent", color: "#c8c4bc",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: 10, padding: "12px 16px", marginBottom: 8,
+          textDecoration: "none", transition: "all 0.2s"
         }}>
-          <span style={{ color: "#9a9590", fontSize: 13 }}>BrieflyAI Pro</span>
-          <span style={{ color: "#ffc850", fontSize: 18, fontWeight: 600 }}>
-            €29 <span style={{ fontSize: 12, color: "#7a7570", fontWeight: 400 }}>/ 6 months</span>
-          </span>
-        </div>
-
-        <a href={CHECKOUT_URL} target="_blank" rel="noopener noreferrer" style={{
-          display: "block", width: "100%", background: "#ffc850", color: "#0c0c0e",
-          borderRadius: 10, padding: "15px 24px", textAlign: "center",
-          fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600,
-          textDecoration: "none", boxShadow: "0 4px 20px rgba(255,200,80,0.25)"
-        }}>
-          Start unlimited access →
+          <div>
+            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500 }}>Starter — 3 Months</div>
+            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: "#5a5650" }}>One-time payment</div>
+          </div>
+          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: "#c8c4bc" }}>€15</div>
         </a>
 
-        <p style={{ textAlign: "center", marginTop: 12, color: "#3a3a40", fontSize: 11 }}>
-          Cancel anytime · Lemon Squeezy · VAT included
+        {/* Pro -- 1 year (highlighted) */}
+        <a href={CHECKOUT_URL_PRO} target="_blank" rel="noopener noreferrer" style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          background: "#ffc850", color: "#0c0c0e",
+          borderRadius: 10, padding: "14px 16px", marginBottom: 8,
+          textDecoration: "none", transition: "all 0.2s",
+          boxShadow: "0 4px 20px rgba(255,200,80,0.25)",
+          position: "relative"
+        }}>
+          <div style={{
+            position: "absolute", top: -10, left: 16,
+            background: "#0c0c0e", color: "#ffc850",
+            fontSize: 10, fontWeight: 700, letterSpacing: "0.08em",
+            padding: "2px 8px", borderRadius: 4, textTransform: "uppercase"
+          }}>Most popular</div>
+          <div>
+            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700 }}>Pro — 1 Year</div>
+            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 400, opacity: 0.65 }}>One-time payment · €3.25/month</div>
+          </div>
+          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700 }}>€39</div>
+        </a>
+
+        {/* Lifetime */}
+        <a href={CHECKOUT_URL_LIFETIME} target="_blank" rel="noopener noreferrer" style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          background: "transparent", color: "#f0ece2",
+          border: "1px solid rgba(255,200,80,0.25)",
+          borderRadius: 10, padding: "12px 16px", marginBottom: 16,
+          textDecoration: "none", transition: "all 0.2s"
+        }}>
+          <div>
+            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600 }}>Lifetime Access</div>
+            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: "#7a7570" }}>Pay once, use forever</div>
+          </div>
+          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: "#ffc850" }}>€79</div>
+        </a>
+
+        <p style={{ textAlign: "center", color: "#3a3a40", fontSize: 11 }}>
+          Secure checkout · Lemon Squeezy · VAT included
         </p>
       </div>
     </div>
@@ -168,7 +197,6 @@ export default function App() {
     setLoading(true);
     setResult(null);
 
-    // Abort controller for timeout
     const controller = new AbortController();
     abortRef.current = controller;
     const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
@@ -218,13 +246,9 @@ ${notes}`
       const clean = raw.replace(/```json|```/g, "").trim();
 
       let parsed;
-      try {
-        parsed = JSON.parse(clean);
-      } catch {
-        throw new Error("Could not parse response. Please try again.");
-      }
+      try { parsed = JSON.parse(clean); }
+      catch { throw new Error("Could not parse response. Please try again."); }
 
-      // Validate required fields
       if (!parsed.title || !parsed.summary) {
         throw new Error("Incomplete response received. Please try again.");
       }
@@ -274,31 +298,23 @@ ${notes}`
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #2a2a30; border-radius: 2px; }
-
         .grain { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.4; }
         .glow-orb { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
         .container { max-width: 780px; margin: 0 auto; padding: 0 24px 80px; position: relative; z-index: 1; }
-
         .header { padding: 56px 0 40px; animation: fadeUp 0.6s ease both; }
         .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
-
         .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,200,80,0.08); border: 1px solid rgba(255,200,80,0.2); color: #ffc850; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; }
         .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #ffc850; animation: pulse 2s infinite; }
-
         .usage-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: #7a7570; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-family: 'DM Sans', sans-serif; }
         .usage-pill.warn { background: rgba(255,120,80,0.08); border-color: rgba(255,120,80,0.2); color: #ff9070; }
-
         h1 { font-family: 'Playfair Display', serif; font-size: clamp(32px, 5vw, 48px); font-weight: 700; line-height: 1.1; color: #f0ece2; margin-bottom: 14px; letter-spacing: -0.02em; }
         h1 span { color: #ffc850; }
         .subtitle { color: #7a7570; font-size: 15px; font-weight: 300; line-height: 1.6; max-width: 480px; }
-
         .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; padding: 28px; backdrop-filter: blur(10px); animation: fadeUp 0.6s ease both; }
         .card-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5a5650; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-
         textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; color: #c8c4bc; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 300; line-height: 1.7; padding: 16px; resize: vertical; outline: none; transition: border-color 0.2s; min-height: 180px; max-height: 400px; }
         textarea:focus { border-color: rgba(255,200,80,0.3); }
         textarea::placeholder { color: #3a3a40; }
-
         .btn-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
         .btn-primary { flex: 1; min-width: 140px; background: #ffc850; color: #0c0c0e; border: none; border-radius: 10px; padding: 14px 24px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-primary:hover:not(:disabled) { background: #ffd060; transform: translateY(-1px); }
@@ -307,73 +323,57 @@ ${notes}`
         .btn-primary.locked:hover:not(:disabled) { background: rgba(255,200,80,0.2); transform: translateY(-1px); }
         .btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #7a7570; border-radius: 10px; padding: 14px 18px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .btn-secondary:hover { border-color: rgba(255,255,255,0.2); color: #c8c4bc; }
-
         .error { margin-top: 12px; background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.2); color: #ff8080; border-radius: 8px; padding: 10px 14px; font-size: 13px; display: flex; align-items: flex-start; gap: 8px; }
         .error-retry { background: transparent; border: 1px solid rgba(255,80,80,0.3); color: #ff8080; border-radius: 6px; padding: 4px 10px; font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; white-space: nowrap; margin-left: auto; flex-shrink: 0; }
-
         .loading-state { text-align: center; padding: 56px 0; animation: fadeUp 0.4s ease both; }
         .spinner { width: 40px; height: 40px; border: 2px solid rgba(255,200,80,0.15); border-top-color: #ffc850; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
         .loading-text { color: #5a5650; font-size: 14px; font-weight: 300; }
         .loading-cancel { margin-top: 16px; background: transparent; border: 1px solid rgba(255,255,255,0.08); color: #4a4a50; border-radius: 8px; padding: 8px 16px; font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; }
         .loading-cancel:hover { color: #7a7570; border-color: rgba(255,255,255,0.15); }
-
         .result-section { animation: fadeUp 0.5s ease both; }
         .result-title { font-family: 'Playfair Display', serif; font-size: 20px; color: #f0ece2; margin-bottom: 20px; font-weight: 700; }
-
         .tabs { display: flex; gap: 2px; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 3px; margin-bottom: 20px; }
         .tab { flex: 1; padding: 9px 14px; background: transparent; border: none; border-radius: 8px; color: #5a5650; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .tab.active { background: rgba(255,200,80,0.12); color: #ffc850; }
         .tab:hover:not(.active) { color: #9a9590; }
-
         .summary-text { color: #c8c4bc; font-size: 15px; font-weight: 300; line-height: 1.75; margin-bottom: 24px; }
         .section-heading { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5a5650; margin-bottom: 12px; margin-top: 24px; }
         .section-heading:first-child { margin-top: 0; }
-
         .decision-list { list-style: none; }
         .decision-list li { display: flex; align-items: flex-start; gap: 10px; color: #c8c4bc; font-size: 14px; font-weight: 300; line-height: 1.6; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
         .decision-list li:last-child { border-bottom: none; }
         .decision-dot { width: 6px; height: 6px; border-radius: 50%; background: #ffc850; margin-top: 7px; flex-shrink: 0; }
-
         .action-card { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 14px 16px; margin-bottom: 8px; }
         .action-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px; }
         .action-owner { font-size: 12px; font-weight: 600; letter-spacing: 0.05em; color: #ffc850; text-transform: uppercase; }
         .action-deadline { font-size: 11px; color: #4a4a50; background: rgba(255,255,255,0.04); border-radius: 4px; padding: 2px 8px; }
         .action-task { color: #c8c4bc; font-size: 14px; font-weight: 300; line-height: 1.5; }
-
         .followup-list { list-style: none; }
         .followup-list li { display: flex; align-items: flex-start; gap: 10px; color: #9a9590; font-size: 14px; font-weight: 300; line-height: 1.6; padding: 7px 0; }
         .followup-arrow { color: #3a3a40; flex-shrink: 0; }
-
         .email-subject { background: rgba(255,200,80,0.06); border: 1px solid rgba(255,200,80,0.15); border-radius: 8px; padding: 12px 16px; margin-bottom: 14px; }
         .email-subject-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5a5040; margin-bottom: 4px; }
         .email-subject-text { color: #e8c870; font-size: 14px; font-weight: 500; }
         .email-body { color: #b8b4ac; font-size: 14px; font-weight: 300; line-height: 1.8; white-space: pre-wrap; background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px; }
-
         .copy-btn { display: flex; align-items: center; gap: 6px; background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #7a7570; border-radius: 6px; padding: 7px 12px; font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; margin-top: 12px; float: right; }
         .copy-btn:hover { border-color: rgba(255,200,80,0.3); color: #ffc850; }
         .copy-btn.copied { border-color: rgba(80,200,120,0.3); color: #50c878; }
-
         .upgrade-banner { margin-top: 20px; background: rgba(255,200,80,0.05); border: 1px solid rgba(255,200,80,0.15); border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; animation: fadeUp 0.4s ease both; }
         .upgrade-banner-text { color: #9a9590; font-size: 13px; font-weight: 300; }
         .upgrade-banner-text strong { color: #ffc850; font-weight: 500; }
         .upgrade-banner-btn { background: #ffc850; color: #0c0c0e; border: none; border-radius: 8px; padding: 9px 18px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; white-space: nowrap; }
         .upgrade-banner-btn:hover { background: #ffd060; }
-
         .try-again-btn { display: flex; align-items: center; gap: 6px; background: transparent; border: 1px solid rgba(255,255,255,0.08); color: #5a5650; border-radius: 8px; padding: 10px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; margin-top: 20px; }
         .try-again-btn:hover { color: #9a9590; border-color: rgba(255,255,255,0.15); }
-
         .privacy-note { margin-top: 16px; padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; font-size: 11px; color: #3a3a40; line-height: 1.6; }
-
         .footer { text-align: center; padding-top: 40px; color: #3a3a40; font-size: 12px; font-weight: 300; animation: fadeUp 0.8s ease 0.4s both; }
         .footer a { color: #5a5650; text-decoration: none; }
         .footer a:hover { color: #9a9590; }
-
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes spin { to { transform: rotate(360deg); } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
         @media (max-width: 520px) {
           .btn-row { flex-direction: column; }
           .btn-primary, .btn-secondary { width: 100%; min-width: unset; }
@@ -399,12 +399,12 @@ ${notes}`
                 {remainingFree === 1 ? "⚠ " : ""}{remainingFree} free {remainingFree === 1 ? "debrief" : "debriefs"} left
               </span>
             ) : (
-              <a href={CHECKOUT_URL} target="_blank" rel="noopener noreferrer" style={{
+              <a href={CHECKOUT_URL_6M} target="_blank" rel="noopener noreferrer" style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
                 background: "rgba(255,200,80,0.1)", border: "1px solid rgba(255,200,80,0.25)",
                 color: "#ffc850", fontSize: 11, fontWeight: 500, padding: "5px 12px",
                 borderRadius: 20, textDecoration: "none"
-              }}>⚡ Upgrade to Pro</a>
+              }}>⚡ Get Access from €15</a>
             )}
           </div>
           <h1>Turn messy notes into<br /><span>clear action.</span></h1>
@@ -514,10 +514,10 @@ ${notes}`
             {usesCount >= FREE_LIMIT && (
               <div className="upgrade-banner">
                 <p className="upgrade-banner-text">
-                  <strong>That was your last free debrief.</strong> Upgrade to keep saving time after every meeting.
+                  <strong>That was your last free debrief.</strong> Get full access from €15 — one-time payment.
                 </p>
-                <a href={CHECKOUT_URL} target="_blank" rel="noopener noreferrer" className="upgrade-banner-btn">
-                  Get unlimited access →
+                <a href={CHECKOUT_URL_PRO} target="_blank" rel="noopener noreferrer" className="upgrade-banner-btn">
+                  Get access →
                 </a>
               </div>
             )}
