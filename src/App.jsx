@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
-const CHECKOUT_URL_STARTER  = "https://nexiotools.lemonsqueezy.com/checkout/buy/9bdbb630-0778-4cc8-8c5f-0fd9810fb54f"; // €15 / 3 months -- replace with correct link
-const CHECKOUT_URL_PRO      = "https://nexiotools.lemonsqueezy.com/checkout/buy/cec06506-b65e-400c-a745-1175e1f7ee12"; // €39 / 1 year   -- replace with correct link
-const CHECKOUT_URL_LIFETIME = "https://nexiotools.lemonsqueezy.com/checkout/buy/ebdc7bf6-06d4-4eb8-a901-5bc8b66aa1d0"; // €79 / lifetime -- replace with correct link
+const CHECKOUT_URL_STARTER  = "https://nexiotools.lemonsqueezy.com/checkout/buy/9bdbb630-0778-4cc8-8c5f-0fd9810fb54f"; // €15 / 3 months
+const CHECKOUT_URL_PRO      = "https://nexiotools.lemonsqueezy.com/checkout/buy/cec06506-b65e-400c-a745-1175e1f7ee12"; // €39 / 1 year
+const CHECKOUT_URL_LIFETIME = "https://nexiotools.lemonsqueezy.com/checkout/buy/ebdc7bf6-06d4-4eb8-a901-5bc8b66aa1d0"; // €79 / lifetime
 const FREE_LIMIT = 2;
 const STORAGE_KEY = "brieflyai_uses";
 const API_TIMEOUT_MS = 30000;
