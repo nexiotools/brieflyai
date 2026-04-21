@@ -178,7 +178,7 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         signal: controller.signal,
         body: JSON.stringify({
-          model: "claude-3-5-sonnet-20241022",
+          model: "claude-3-haiku-20240307",
           max_tokens: 1000,
           system: `You are an expert meeting facilitator and business communication specialist. Transform raw meeting notes into structured, actionable outputs. IMPORTANT: Detect the language of the meeting notes and respond in that same language throughout — if notes are in Dutch, all output must be in Dutch; if in English, respond in English. Always respond with valid JSON only — no markdown, no backticks, no preamble.`,
           messages: [{
