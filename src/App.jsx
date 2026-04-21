@@ -1,13 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 
-// ─── CONFIG ───────────────────────────────────────────────────────────────────
-const CHECKOUT_URL_STARTER  = "https://nexiotools.lemonsqueezy.com/checkout/buy/9bdbb630-0778-4cc8-8c5f-0fd9810fb54f"; // €15 / 3 months
-const CHECKOUT_URL_PRO      = "https://nexiotools.lemonsqueezy.com/checkout/buy/cec06506-b65e-400c-a745-1175e1f7ee12"; // €39 / 1 year
-const CHECKOUT_URL_LIFETIME = "https://nexiotools.lemonsqueezy.com/checkout/buy/ebdc7bf6-06d4-4eb8-a901-5bc8b66aa1d0"; // €79 / lifetime
+const CHECKOUT_URL_STARTER  = "https://nexiotools.lemonsqueezy.com/checkout/buy/9bdbb630-0778-4cc8-8c5f-0fd9810fb54f";
+const CHECKOUT_URL_PRO      = "https://nexiotools.lemonsqueezy.com/checkout/buy/cec06506-b65e-400c-a745-1175e1f7ee12";
+const CHECKOUT_URL_LIFETIME = "https://nexiotools.lemonsqueezy.com/checkout/buy/ebdc7bf6-06d4-4eb8-a901-5bc8b66aa1d0";
 const FREE_LIMIT = 2;
 const STORAGE_KEY = "brieflyai_uses";
 const API_TIMEOUT_MS = 30000;
-// ─────────────────────────────────────────────────────────────────────────────
 
 const SAMPLE_NOTES = [
   `Quarterly sales review - April 2026
@@ -96,13 +94,12 @@ function PaywallModal({ onClose }) {
           ))}
         </div>
 
-        {/* Starter -- 3 months */}
         <a href={CHECKOUT_URL_STARTER} target="_blank" rel="noopener noreferrer" style={{
           display: "flex", justifyContent: "space-between", alignItems: "center",
           background: "transparent", color: "#c8c4bc",
           border: "1px solid rgba(255,255,255,0.08)",
           borderRadius: 10, padding: "12px 16px", marginBottom: 8,
-          textDecoration: "none", transition: "all 0.2s"
+          textDecoration: "none"
         }}>
           <div>
             <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500 }}>Starter — 3 Months</div>
@@ -111,12 +108,11 @@ function PaywallModal({ onClose }) {
           <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: "#c8c4bc" }}>€15</div>
         </a>
 
-        {/* Pro -- 1 year (highlighted) */}
         <a href={CHECKOUT_URL_PRO} target="_blank" rel="noopener noreferrer" style={{
           display: "flex", justifyContent: "space-between", alignItems: "center",
           background: "#ffc850", color: "#0c0c0e",
           borderRadius: 10, padding: "14px 16px", marginBottom: 8,
-          textDecoration: "none", transition: "all 0.2s",
+          textDecoration: "none",
           boxShadow: "0 4px 20px rgba(255,200,80,0.25)",
           position: "relative"
         }}>
@@ -133,13 +129,12 @@ function PaywallModal({ onClose }) {
           <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700 }}>€39</div>
         </a>
 
-        {/* Lifetime */}
         <a href={CHECKOUT_URL_LIFETIME} target="_blank" rel="noopener noreferrer" style={{
           display: "flex", justifyContent: "space-between", alignItems: "center",
           background: "transparent", color: "#f0ece2",
           border: "1px solid rgba(255,200,80,0.25)",
           borderRadius: 10, padding: "12px 16px", marginBottom: 16,
-          textDecoration: "none", transition: "all 0.2s"
+          textDecoration: "none"
         }}>
           <div>
             <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600 }}>Lifetime Access</div>
@@ -186,12 +181,17 @@ export default function App() {
   const isLocked = usesCount >= FREE_LIMIT;
   const remainingFree = Math.max(0, FREE_LIMIT - usesCount);
 
+  const openPaywall = () => {
+    setResult(null);
+    setShowPaywall(true);
+  };
+
   const handleGenerate = async () => {
     if (!notes.trim() || notes.trim().length < 30) {
       setError("Please paste your meeting notes first (at least 30 characters).");
       return;
     }
-    if (isLocked) { setResult(null); setShowPaywall(true); return; }
+    if (isLocked) { openPaywall(); return; }
 
     setError("");
     setLoading(true);
@@ -209,22 +209,20 @@ export default function App() {
         body: JSON.stringify({
           model: "claude-opus-4-7",
           max_tokens: 1000,
-          system: `You are an expert meeting facilitator and business communication specialist. Transform raw meeting notes into structured, actionable outputs. IMPORTANT: Detect the language of the meeting notes and respond in that same language throughout — if notes are in Dutch, all output must be in Dutch; if in English, respond in English. Always respond with valid JSON only — no markdown, no backticks, no preamble.`,
+          system: `You are an expert meeting facilitator and business communication specialist. Transform raw meeting notes into structured, actionable outputs. IMPORTANT: Detect the language of the meeting notes and respond in that same language throughout. Always respond with valid JSON only — no markdown, no backticks, no preamble.`,
           messages: [{
             role: "user",
-            content: `Transform these meeting notes into structured outputs. Respond ONLY with a valid JSON object with these exact keys:
+            content: `Transform these meeting notes into structured outputs. Respond ONLY with a valid JSON object:
 
 {
   "title": "concise meeting title (max 8 words, same language as notes)",
-  "summary": "2-3 sentence executive summary of what was discussed and decided (same language as notes)",
-  "decisions": ["array of key decisions made, each as a short sentence (same language as notes)"],
-  "actions": [
-    { "owner": "person name or role", "task": "specific task (same language as notes)", "deadline": "deadline if mentioned, else TBD" }
-  ],
-  "followups": ["topics needing future follow-up, as short sentences (same language as notes)"],
+  "summary": "2-3 sentence executive summary (same language as notes)",
+  "decisions": ["key decisions made (same language as notes)"],
+  "actions": [{ "owner": "person name", "task": "specific task (same language as notes)", "deadline": "deadline or TBD" }],
+  "followups": ["topics needing follow-up (same language as notes)"],
   "email": {
-    "subject": "clear email subject line (same language as notes)",
-    "body": "professional follow-up email body (3-4 short paragraphs, plain text, no markdown, same language as notes)"
+    "subject": "email subject line (same language as notes)",
+    "body": "professional follow-up email (3-4 paragraphs, plain text, same language as notes)"
   }
 }
 
@@ -250,17 +248,20 @@ ${notes}`
       catch { throw new Error("Could not parse response. Please try again."); }
 
       if (!parsed.title || !parsed.summary) {
-        throw new Error("Incomplete response received. Please try again.");
+        throw new Error("Incomplete response. Please try again.");
       }
 
       setResult(parsed);
       setActiveTab("summary");
-      incrementUses();
+      const newCount = incrementUses();
+      if (newCount >= FREE_LIMIT) {
+        // Next attempt will show paywall
+      }
 
     } catch (e) {
       clearTimeout(timeout);
       if (e.name === "AbortError") {
-        setError("Request timed out. Please check your connection and try again.");
+        setError("Request timed out. Please try again.");
       } else {
         setError(e.message || "Something went wrong. Please try again.");
       }
@@ -305,8 +306,9 @@ ${notes}`
         .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
         .badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,200,80,0.08); border: 1px solid rgba(255,200,80,0.2); color: #ffc850; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; }
         .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #ffc850; animation: pulse 2s infinite; }
-        .usage-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: #7a7570; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-family: 'DM Sans', sans-serif; }
+        .usage-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: #7a7570; font-size: 11px; padding: 5px 12px; border-radius: 20px; }
         .usage-pill.warn { background: rgba(255,120,80,0.08); border-color: rgba(255,120,80,0.2); color: #ff9070; }
+        .access-btn { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,200,80,0.1); border: 1px solid rgba(255,200,80,0.25); color: #ffc850; font-size: 11px; font-weight: 500; padding: 5px 12px; border-radius: 20px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
         h1 { font-family: 'Playfair Display', serif; font-size: clamp(32px, 5vw, 48px); font-weight: 700; line-height: 1.1; color: #f0ece2; margin-bottom: 14px; letter-spacing: -0.02em; }
         h1 span { color: #ffc850; }
         .subtitle { color: #7a7570; font-size: 15px; font-weight: 300; line-height: 1.6; max-width: 480px; }
@@ -320,7 +322,7 @@ ${notes}`
         .btn-primary:hover:not(:disabled) { background: #ffd060; transform: translateY(-1px); }
         .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
         .btn-primary.locked { background: rgba(255,200,80,0.12); color: #ffc850; border: 1px solid rgba(255,200,80,0.3); }
-        .btn-primary.locked:hover:not(:disabled) { background: rgba(255,200,80,0.2); transform: translateY(-1px); }
+        .btn-primary.locked:hover { background: rgba(255,200,80,0.2); transform: translateY(-1px); }
         .btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #7a7570; border-radius: 10px; padding: 14px 18px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
         .btn-secondary:hover { border-color: rgba(255,255,255,0.2); color: #c8c4bc; }
         .error { margin-top: 12px; background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.2); color: #ff8080; border-radius: 8px; padding: 10px 14px; font-size: 13px; display: flex; align-items: flex-start; gap: 8px; }
@@ -328,8 +330,7 @@ ${notes}`
         .loading-state { text-align: center; padding: 56px 0; animation: fadeUp 0.4s ease both; }
         .spinner { width: 40px; height: 40px; border: 2px solid rgba(255,200,80,0.15); border-top-color: #ffc850; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
         .loading-text { color: #5a5650; font-size: 14px; font-weight: 300; }
-        .loading-cancel { margin-top: 16px; background: transparent; border: 1px solid rgba(255,255,255,0.08); color: #4a4a50; border-radius: 8px; padding: 8px 16px; font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; }
-        .loading-cancel:hover { color: #7a7570; border-color: rgba(255,255,255,0.15); }
+        .loading-cancel { margin-top: 16px; background: transparent; border: 1px solid rgba(255,255,255,0.08); color: #4a4a50; border-radius: 8px; padding: 8px 16px; font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; }
         .result-section { animation: fadeUp 0.5s ease both; }
         .result-title { font-family: 'Playfair Display', serif; font-size: 20px; color: #f0ece2; margin-bottom: 20px; font-weight: 700; }
         .tabs { display: flex; gap: 2px; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 3px; margin-bottom: 20px; }
@@ -358,15 +359,15 @@ ${notes}`
         .copy-btn { display: flex; align-items: center; gap: 6px; background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #7a7570; border-radius: 6px; padding: 7px 12px; font-family: 'DM Sans', sans-serif; font-size: 12px; cursor: pointer; transition: all 0.2s; margin-top: 12px; float: right; }
         .copy-btn:hover { border-color: rgba(255,200,80,0.3); color: #ffc850; }
         .copy-btn.copied { border-color: rgba(80,200,120,0.3); color: #50c878; }
-        .upgrade-banner { margin-top: 20px; background: rgba(255,200,80,0.05); border: 1px solid rgba(255,200,80,0.15); border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; animation: fadeUp 0.4s ease both; }
+        .upgrade-banner { margin-top: 20px; background: rgba(255,200,80,0.05); border: 1px solid rgba(255,200,80,0.15); border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
         .upgrade-banner-text { color: #9a9590; font-size: 13px; font-weight: 300; }
         .upgrade-banner-text strong { color: #ffc850; font-weight: 500; }
-        .upgrade-banner-btn { background: #ffc850; color: #0c0c0e; border: none; border-radius: 8px; padding: 9px 18px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; white-space: nowrap; }
+        .upgrade-banner-btn { background: #ffc850; color: #0c0c0e; border: none; border-radius: 8px; padding: 9px 18px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
         .upgrade-banner-btn:hover { background: #ffd060; }
         .try-again-btn { display: flex; align-items: center; gap: 6px; background: transparent; border: 1px solid rgba(255,255,255,0.08); color: #5a5650; border-radius: 8px; padding: 10px 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; margin-top: 20px; }
         .try-again-btn:hover { color: #9a9590; border-color: rgba(255,255,255,0.15); }
         .privacy-note { margin-top: 16px; padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; font-size: 11px; color: #3a3a40; line-height: 1.6; }
-        .footer { text-align: center; padding-top: 40px; color: #3a3a40; font-size: 12px; font-weight: 300; animation: fadeUp 0.8s ease 0.4s both; }
+        .footer { text-align: center; padding-top: 40px; color: #3a3a40; font-size: 12px; font-weight: 300; }
         .footer a { color: #5a5650; text-decoration: none; }
         .footer a:hover { color: #9a9590; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
@@ -399,12 +400,9 @@ ${notes}`
                 {remainingFree === 1 ? "⚠ " : ""}{remainingFree} free {remainingFree === 1 ? "debrief" : "debriefs"} left
               </span>
             ) : (
-              <button onClick={() => setShowPaywall(true)} style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                background: "rgba(255,200,80,0.1)", border: "1px solid rgba(255,200,80,0.25)",
-                color: "#ffc850", fontSize: 11, fontWeight: 500, padding: "5px 12px",
-                borderRadius: 20, cursor: "pointer"
-              }}>⚡ Get Access from €15</button>
+              <button className="access-btn" onClick={openPaywall}>
+                ⚡ Get Access from €15
+              </button>
             )}
           </div>
           <h1>Turn messy notes into<br /><span>clear action.</span></h1>
@@ -423,14 +421,18 @@ ${notes}`
               placeholder="Paste your raw notes here — attendees, what was discussed, decisions made, who said they'd do what... Works in English, Dutch, or any language."
             />
             <div className="btn-row">
-              <button className={`btn-primary${isLocked ? " locked" : ""}`} onClick={handleGenerate} disabled={!notes.trim()}>
+              <button
+                className={`btn-primary${isLocked ? " locked" : ""}`}
+                onClick={isLocked ? openPaywall : handleGenerate}
+                disabled={!notes.trim() && !isLocked}
+              >
                 {isLocked
                   ? <>🔒 Unlock to Generate</>
                   : <><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>Generate Debrief</>
                 }
               </button>
               <button className="btn-secondary" onClick={loadSample}>Try sample</button>
-              {notes && <button className="btn-secondary" onClick={reset}>Clear</button>}
+              {notes && !isLocked && <button className="btn-secondary" onClick={reset}>Clear</button>}
             </div>
             {error && (
               <div className="error">
@@ -439,7 +441,7 @@ ${notes}`
               </div>
             )}
             <div className="privacy-note">
-              🔒 Your notes are sent securely to generate the debrief and are not stored or used for training. Do not paste confidential or legally sensitive content.
+              🔒 Your notes are sent securely and are not stored or used for training. Do not paste confidential content.
             </div>
           </div>
         )}
@@ -516,9 +518,9 @@ ${notes}`
                 <p className="upgrade-banner-text">
                   <strong>That was your last free debrief.</strong> Get full access from €15 — one-time payment.
                 </p>
-                <a href={CHECKOUT_URL_PRO} target="_blank" rel="noopener noreferrer" className="upgrade-banner-btn">
+                <button className="upgrade-banner-btn" onClick={openPaywall}>
                   Get access →
-                </a>
+                </button>
               </div>
             )}
 
