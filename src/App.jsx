@@ -86,6 +86,7 @@ function PaywallModal({ onClose }) {
             "Ready-to-send follow-up emails",
             "Works in any language",
             "Works for any type of meeting",
+            "6 months access — one-time payment",
           ].map((f, i) => (
             <div key={i} style={{
               display: "flex", alignItems: "center", gap: 10, padding: "7px 0",
@@ -105,7 +106,7 @@ function PaywallModal({ onClose }) {
         }}>
           <span style={{ color: "#9a9590", fontSize: 13 }}>BrieflyAI Pro</span>
           <span style={{ color: "#ffc850", fontSize: 18, fontWeight: 600 }}>
-            €12 <span style={{ fontSize: 12, color: "#7a7570", fontWeight: 400 }}>/month</span>
+            €29 <span style={{ fontSize: 12, color: "#7a7570", fontWeight: 400 }}>/ 6 months</span>
           </span>
         </div>
 
