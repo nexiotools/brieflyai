@@ -399,7 +399,7 @@ ${notes}`
                 {remainingFree === 1 ? "⚠ " : ""}{remainingFree} free {remainingFree === 1 ? "debrief" : "debriefs"} left
               </span>
             ) : (
-              <a href={CHECKOUT_URL_6M} target="_blank" rel="noopener noreferrer" style={{
+              <a href={CHECKOUT_URL_PRO} target="_blank" rel="noopener noreferrer" style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
                 background: "rgba(255,200,80,0.1)", border: "1px solid rgba(255,200,80,0.25)",
                 color: "#ffc850", fontSize: 11, fontWeight: 500, padding: "5px 12px",
