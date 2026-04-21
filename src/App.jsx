@@ -399,12 +399,12 @@ ${notes}`
                 {remainingFree === 1 ? "⚠ " : ""}{remainingFree} free {remainingFree === 1 ? "debrief" : "debriefs"} left
               </span>
             ) : (
-              <a href={CHECKOUT_URL_PRO} target="_blank" rel="noopener noreferrer" style={{
+              <button onClick={() => setShowPaywall(true)} style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
                 background: "rgba(255,200,80,0.1)", border: "1px solid rgba(255,200,80,0.25)",
                 color: "#ffc850", fontSize: 11, fontWeight: 500, padding: "5px 12px",
-                borderRadius: 20, textDecoration: "none"
-              }}>⚡ Get Access from €15</a>
+                borderRadius: 20, cursor: "pointer"
+              }}>⚡ Get Access from €15</button>
             )}
           </div>
           <h1>Turn messy notes into<br /><span>clear action.</span></h1>
