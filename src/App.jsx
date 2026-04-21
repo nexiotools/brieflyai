@@ -155,13 +155,16 @@ export default function App() {
   const [notes, setNotes] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [extracting, setExtracting] = useState(false);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("summary");
   const [copied, setCopied] = useState("");
   const [usesCount, setUsesCount] = useState(0);
   const [showPaywall, setShowPaywall] = useState(false);
   const [sampleIndex, setSampleIndex] = useState(0);
+  const [imagePreview, setImagePreview] = useState(null);
   const abortRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     try {
@@ -184,6 +187,64 @@ export default function App() {
   const openPaywall = () => {
     setResult(null);
     setShowPaywall(true);
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) { setError("Please upload an image file."); return; }
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const base64 = ev.target.result;
+      setImagePreview(base64);
+      setExtracting(true);
+      setError("");
+
+      try {
+        const base64Data = base64.split(",")[1];
+        const mediaType = file.type;
+
+        const response = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "claude-opus-4-7",
+            max_tokens: 1000,
+            system: "You extract text from images of handwritten or printed meeting notes. Return only the extracted text, exactly as written, with no commentary or formatting. Preserve line breaks and structure.",
+            messages: [{
+              role: "user",
+              content: [
+                {
+                  type: "image",
+                  source: { type: "base64", media_type: mediaType, data: base64Data }
+                },
+                {
+                  type: "text",
+                  text: "Extract all text from this image of meeting notes. Return only the raw text, preserving structure and line breaks."
+                }
+              ]
+            }]
+          })
+        });
+
+        const data = await response.json();
+        const extracted = data.content?.find(b => b.type === "text")?.text || "";
+        if (extracted.trim()) {
+          setNotes(extracted.trim());
+        } else {
+          setError("Could not extract text from image. Please try a clearer photo or type your notes manually.");
+        }
+      } catch (e) {
+        setError("Image extraction failed. Please try again or type your notes manually.");
+      } finally {
+        setExtracting(false);
+      }
+    };
+    reader.readAsDataURL(file);
+    // Reset input so same file can be re-uploaded
+    e.target.value = "";
   };
 
   const handleGenerate = async () => {
@@ -413,12 +474,71 @@ ${notes}`
           <div className="card" style={{ animationDelay: "0.1s" }}>
             <div className="card-label">
               <span>Your meeting notes</span>
-              <span style={{ color: "#3a3a40", fontWeight: 400 }}>{notes.length > 0 ? `${notes.length} chars` : ""}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {notes.length > 0 && <span style={{ color: "#3a3a40", fontWeight: 400 }}>{notes.length} chars</span>}
+                {/* Hidden file input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={handleImageUpload}
+                  style={{ display: "none" }}
+                />
+                {/* Camera / upload button */}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={extracting}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 5,
+                    background: "rgba(255,200,80,0.08)", border: "1px solid rgba(255,200,80,0.2)",
+                    color: "#ffc850", fontSize: 11, fontWeight: 500,
+                    padding: "4px 10px", borderRadius: 12, cursor: "pointer",
+                    fontFamily: "'DM Sans', sans-serif", opacity: extracting ? 0.5 : 1
+                  }}
+                >
+                  📷 {extracting ? "Reading..." : "Scan notes"}
+                </button>
+              </div>
             </div>
+
+            {/* Image preview */}
+            {imagePreview && !extracting && (
+              <div style={{
+                marginBottom: 10, borderRadius: 8, overflow: "hidden",
+                border: "1px solid rgba(255,200,80,0.2)", position: "relative"
+              }}>
+                <img src={imagePreview} alt="Uploaded notes" style={{ width: "100%", maxHeight: 160, objectFit: "cover", display: "block" }} />
+                <button
+                  onClick={() => { setImagePreview(null); setNotes(""); }}
+                  style={{
+                    position: "absolute", top: 6, right: 6,
+                    background: "rgba(0,0,0,0.6)", border: "none", color: "#fff",
+                    borderRadius: "50%", width: 22, height: 22, cursor: "pointer",
+                    fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center"
+                  }}
+                >✕</button>
+              </div>
+            )}
+
+            {extracting && (
+              <div style={{
+                marginBottom: 10, padding: "14px 16px",
+                background: "rgba(255,200,80,0.05)", border: "1px solid rgba(255,200,80,0.15)",
+                borderRadius: 8, display: "flex", alignItems: "center", gap: 10
+              }}>
+                <div style={{
+                  width: 16, height: 16, border: "2px solid rgba(255,200,80,0.2)",
+                  borderTopColor: "#ffc850", borderRadius: "50%", animation: "spin 0.7s linear infinite", flexShrink: 0
+                }} />
+                <span style={{ color: "#7a7570", fontSize: 13 }}>Reading your handwritten notes...</span>
+              </div>
+            )}
+
             <textarea
               value={notes}
               onChange={e => setNotes(e.target.value)}
-              placeholder="Paste your raw notes here — attendees, what was discussed, decisions made, who said they'd do what... Works in English, Dutch, or any language."
+              placeholder="Paste your raw notes here — or use 📷 Scan notes to photograph handwritten or printed notes. Works in English, Dutch, or any language."
             />
             <div className="btn-row">
               <button
