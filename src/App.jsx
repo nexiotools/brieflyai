@@ -44,8 +44,12 @@ function PaywallModal({ onClose, onWhitelisted }) {
   const [code, setCode] = useState("");
   const [codeStatus, setCodeStatus] = useState("idle");
   const [showCodeEntry, setShowCodeEntry] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailStatus, setEmailStatus] = useState("idle"); // idle | checking | success | error | expired
+  const [showEmailEntry, setShowEmailEntry] = useState(false);
+  const [daysLeft, setDaysLeft] = useState(null);
 
-  const handleValidate = async () => {
+  const handleValidateCode = async () => {
     if (!code.trim()) return;
     setCodeStatus("checking");
     try {
@@ -66,6 +70,38 @@ function PaywallModal({ onClose, onWhitelisted }) {
     } catch {
       setCodeStatus("error");
       setTimeout(() => setCodeStatus("idle"), 2000);
+    }
+  };
+
+  const handleValidateEmail = async () => {
+    if (!email.trim() || !email.includes("@")) return;
+    setEmailStatus("checking");
+    try {
+      const res = await fetch("/api/validate-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        setEmailStatus("success");
+        setDaysLeft(data.daysLeft);
+        try {
+          localStorage.setItem(WHITELIST_KEY, "1");
+          localStorage.setItem(WHITELIST_KEY + "_email", email.trim().toLowerCase());
+          localStorage.setItem(WHITELIST_KEY + "_expires", String(data.expiresAt));
+        } catch {}
+        setTimeout(() => { onWhitelisted(); onClose(); }, 1000);
+      } else if (data.expired) {
+        setEmailStatus("expired");
+        setTimeout(() => setEmailStatus("idle"), 3000);
+      } else {
+        setEmailStatus("error");
+        setTimeout(() => setEmailStatus("idle"), 2000);
+      }
+    } catch {
+      setEmailStatus("error");
+      setTimeout(() => setEmailStatus("idle"), 2000);
     }
   };
 
@@ -176,22 +212,69 @@ function PaywallModal({ onClose, onWhitelisted }) {
           Secure checkout · Lemon Squeezy · VAT included
         </p>
 
+        {/* Already paid -- enter email */}
+        <div style={{ marginTop: 16, borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 16 }}>
+          {!showEmailEntry ? (
+            <button onClick={() => { setShowEmailEntry(true); setShowCodeEntry(false); }} style={{
+              background: "transparent", border: "none", color: "#7a7570",
+              fontSize: 12, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
+              textDecoration: "underline", display: "block", margin: "0 auto", padding: "4px 0"
+            }}>
+              Already paid? Enter your email to unlock
+            </button>
+          ) : (
+            <div>
+              <p style={{ color: "#7a7570", fontSize: 11, marginBottom: 8, textAlign: "center" }}>
+                Enter the email you used to purchase
+              </p>
+              <div style={{ display: "flex", gap: 8 }}>
+                <input
+                  type="email" value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && handleValidateEmail()}
+                  placeholder="your@email.com"
+                  style={{
+                    flex: 1, background: "rgba(255,255,255,0.05)",
+                    border: `1px solid ${emailStatus === "error" || emailStatus === "expired" ? "rgba(255,80,80,0.4)" : emailStatus === "success" ? "rgba(80,200,120,0.4)" : "rgba(255,255,255,0.1)"}`,
+                    borderRadius: 8, padding: "10px 14px", color: "#f0ece2",
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: "none"
+                  }}
+                />
+                <button onClick={handleValidateEmail}
+                  disabled={emailStatus === "checking" || emailStatus === "success"}
+                  style={{
+                    background: emailStatus === "success" ? "rgba(80,200,120,0.2)" : "rgba(255,200,80,0.15)",
+                    border: `1px solid ${emailStatus === "success" ? "rgba(80,200,120,0.3)" : "rgba(255,200,80,0.3)"}`,
+                    color: emailStatus === "success" ? "#50c878" : "#ffc850",
+                    borderRadius: 8, padding: "10px 16px", cursor: "pointer",
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap"
+                  }}>
+                  {emailStatus === "checking" ? "..." : emailStatus === "success" ? "✓" : "Unlock"}
+                </button>
+              </div>
+              {emailStatus === "error" && <p style={{ color: "#ff8080", fontSize: 11, marginTop: 6, textAlign: "center" }}>No active purchase found for this email.</p>}
+              {emailStatus === "expired" && <p style={{ color: "#ff8080", fontSize: 11, marginTop: 6, textAlign: "center" }}>Your access has expired. Please purchase a new plan.</p>}
+              {emailStatus === "success" && <p style={{ color: "#50c878", fontSize: 11, marginTop: 6, textAlign: "center" }}>✓ Access granted! {daysLeft} days remaining.</p>}
+            </div>
+          )}
+        </div>
+
         {/* Access code entry */}
         {!showCodeEntry ? (
-          <button onClick={() => setShowCodeEntry(true)} style={{
-            background: "transparent", border: "none", color: "#4a4a50",
-            fontSize: 12, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
+          <button onClick={() => { setShowCodeEntry(true); setShowEmailEntry(false); }} style={{
+            background: "transparent", border: "none", color: "#3a3a40",
+            fontSize: 11, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
             textDecoration: "underline", display: "block", margin: "8px auto 0", padding: "4px 0"
           }}>
             Have an access code?
           </button>
         ) : (
-          <div style={{ marginTop: 12 }}>
+          <div style={{ marginTop: 8 }}>
             <div style={{ display: "flex", gap: 8 }}>
               <input
                 type="text" value={code}
                 onChange={e => setCode(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleValidate()}
+                onKeyDown={e => e.key === "Enter" && handleValidateCode()}
                 placeholder="Enter your access code"
                 style={{
                   flex: 1, background: "rgba(255,255,255,0.05)",
@@ -200,7 +283,7 @@ function PaywallModal({ onClose, onWhitelisted }) {
                   fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: "none"
                 }}
               />
-              <button onClick={handleValidate}
+              <button onClick={handleValidateCode}
                 disabled={codeStatus === "checking" || codeStatus === "success"}
                 style={{
                   background: codeStatus === "success" ? "rgba(80,200,120,0.2)" : "rgba(255,200,80,0.15)",
@@ -242,7 +325,18 @@ export default function App() {
       const stored = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
       setUsesCount(stored);
       const wl = localStorage.getItem(WHITELIST_KEY);
-      if (wl === "1") setIsWhitelisted(true);
+      if (wl === "1") {
+        // Check if email-based access has expired
+        const expiresAt = localStorage.getItem(WHITELIST_KEY + "_expires");
+        if (expiresAt && parseInt(expiresAt) < Date.now()) {
+          // Expired -- clear and re-validate silently
+          localStorage.removeItem(WHITELIST_KEY);
+          localStorage.removeItem(WHITELIST_KEY + "_email");
+          localStorage.removeItem(WHITELIST_KEY + "_expires");
+        } else {
+          setIsWhitelisted(true);
+        }
+      }
     } catch { setUsesCount(0); }
     return () => { if (abortRef.current) abortRef.current.abort(); };
   }, []);
