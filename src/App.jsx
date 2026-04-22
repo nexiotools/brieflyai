@@ -820,7 +820,7 @@ ${notes}`
         )}
 
         <div className="footer">
-          <p>BrieflyAI by <a href="https://nexio.tools" target="_blank" rel="noopener noreferrer">Nexio</a> &mdash; Save 20 minutes per meeting</p>
+          <p>BrieflyAI by <a href="https://nexiotools.nl" target="_blank" rel="noopener noreferrer">nexiotools.nl</a> &mdash; Save 20 minutes per meeting</p>
         </div>
       </div>
     </div>
