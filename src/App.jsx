@@ -322,6 +322,8 @@ export default function App() {
   const [usesCount, setUsesCount] = useState(0);
   const [showPaywall, setShowPaywall] = useState(false);
   const [isWhitelisted, setIsWhitelisted] = useState(false);
+  const [accessPlan, setAccessPlan] = useState(null);
+  const [accessDaysLeft, setAccessDaysLeft] = useState(null);
   const [sampleIndex, setSampleIndex] = useState(0);
   const [imagePreview, setImagePreview] = useState(null);
   const abortRef = useRef(null);
@@ -338,8 +340,16 @@ export default function App() {
           localStorage.removeItem(WHITELIST_KEY);
           localStorage.removeItem(WHITELIST_KEY + "_email");
           localStorage.removeItem(WHITELIST_KEY + "_expires");
+          localStorage.removeItem(WHITELIST_KEY + "_plan");
         } else {
           setIsWhitelisted(true);
+          const plan = localStorage.getItem(WHITELIST_KEY + "_plan");
+          const exp = localStorage.getItem(WHITELIST_KEY + "_expires");
+          if (plan) setAccessPlan(plan);
+          if (exp && plan !== "Lifetime") {
+            const days = Math.ceil((parseInt(exp) - Date.now()) / (1000 * 60 * 60 * 24));
+            setAccessDaysLeft(days);
+          }
         }
       }
     } catch { setUsesCount(0); }
@@ -360,9 +370,11 @@ export default function App() {
               localStorage.setItem(WHITELIST_KEY, "1");
               localStorage.setItem(WHITELIST_KEY + "_email", emailParam.trim().toLowerCase());
               localStorage.setItem(WHITELIST_KEY + "_expires", String(data.expiresAt));
+              if (data.plan) localStorage.setItem(WHITELIST_KEY + "_plan", data.plan);
             } catch {}
             setIsWhitelisted(true);
-            // Clean URL without reload
+            if (data.plan) setAccessPlan(data.plan);
+            if (data.daysLeft) setAccessDaysLeft(data.daysLeft);
             window.history.replaceState({}, "", window.location.pathname);
           }
         })
@@ -656,7 +668,7 @@ ${notes}`
             <div className="badge"><span className="badge-dot" />AI-Powered</div>
             {isWhitelisted ? (
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(80,200,120,0.1)", border: "1px solid rgba(80,200,120,0.2)", color: "#50c878", fontSize: 11, padding: "5px 12px", borderRadius: 20 }}>
-                ✓ Access granted
+                ✓ {accessPlan ? accessPlan : "Access granted"}{accessPlan && accessPlan !== "Lifetime" && accessDaysLeft ? ` · ${accessDaysLeft} days left` : accessPlan === "Lifetime" ? " · Lifetime" : ""}
               </span>
             ) : usesCount < FREE_LIMIT ? (
               <span className={`usage-pill${remainingFree === 1 ? " warn" : ""}`}>
