@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 
 const CHECKOUT_URL_STARTER  = "https://nexiotools.lemonsqueezy.com/checkout/buy/277fbbb3-04a7-48fd-aec3-d92037db717e";
-const CHECKOUT_URL_PRO      = "https://nexiotools.lemonsqueezy.com/checkout/buy/277fbbb3-04a7-48fd-aec3-d92037db717e?variant=1568732";
-const CHECKOUT_URL_LIFETIME = "https://nexiotools.lemonsqueezy.com/checkout/buy/277fbbb3-04a7-48fd-aec3-d92037db717e?variant=1568734";
+const CHECKOUT_URL_PRO      = "https://nexiotools.lemonsqueezy.com/checkout/buy/277fbbb3-04a7-48fd-aec3-d92037db717e";
+const CHECKOUT_URL_LIFETIME = "https://nexiotools.lemonsqueezy.com/checkout/buy/277fbbb3-04a7-48fd-aec3-d92037db717e";
 const FREE_LIMIT = 2;
 const STORAGE_KEY = "brieflyai_uses";
 const WHITELIST_KEY = "brieflyai_whitelisted";
