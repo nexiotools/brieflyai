@@ -129,7 +129,14 @@ function PaywallModal({ onClose, onWhitelisted }) {
           background: "rgba(255,200,80,0.1)", border: "1px solid rgba(255,200,80,0.2)",
           display: "flex", alignItems: "center", justifyContent: "center",
           marginBottom: 20, fontSize: 22
-        }}>⚡</div>
+        }}>
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="7" fill="#13131a"/>
+            <rect x="6" y="6" width="5" height="20" rx="1.4" fill="white"/>
+            <rect x="21" y="6" width="5" height="20" rx="1.4" fill="white"/>
+            <polygon points="11,6 16,6 26,26 21,26" fill="#ffc850"/>
+          </svg>
+        </div>
 
         <h2 style={{
           fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700,
@@ -657,7 +664,7 @@ ${notes}`
               </span>
             ) : (
               <button className="access-btn" onClick={openPaywall}>
-                ⚡ Get Access from €15
+                Get Access from €15
               </button>
             )}
           </div>
