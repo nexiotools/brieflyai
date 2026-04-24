@@ -865,6 +865,12 @@ ${notes}`
 
         <div className="footer">
           <p>BrieflyAI by <a href="https://nexiotools.nl" target="_blank" rel="noopener noreferrer">nexiotools.nl</a> &mdash; Save 20 minutes per meeting</p>
+          <p style={{ fontSize: 11, color: "rgba(240,236,232,0.3)", marginTop: 6 }}>
+            Your content is processed securely and never stored. &nbsp;
+            <a href="https://nexiotools.nl/privacy.html" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(240,236,232,0.3)" }}>Privacy Policy</a>
+            &nbsp;·&nbsp;
+            <a href="https://nexiotools.nl/terms.html" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(240,236,232,0.3)" }}>Terms of Service</a>
+          </p>
         </div>
       </div>
     </div>
