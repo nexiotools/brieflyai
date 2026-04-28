@@ -370,6 +370,9 @@ export default function App() {
       privacyNote: "🔒 Your notes are sent securely and are not stored or used for training. Do not paste confidential content.",
       footerTagline: "Save 20 minutes per meeting",
       dueLabel: "Due:",
+      accessGranted: "Access granted",
+      lifetime: "Lifetime",
+      daysLeft: (n) => `${n} days left`,
     },
     nl: {
       h1a: "Zet rommelige notities om in",
@@ -409,6 +412,9 @@ export default function App() {
       privacyNote: "🔒 Je notities worden veilig verwerkt en nooit opgeslagen of gebruikt voor training. Plak geen vertrouwelijke inhoud.",
       footerTagline: "Bespaar 20 minuten per vergadering",
       dueLabel: "Deadline:",
+      accessGranted: "Toegang verleend",
+      lifetime: "Levenslang",
+      daysLeft: (n) => `Nog ${n} dagen`,
     },
     fr: {
       h1a: "Transformez vos notes en",
@@ -448,6 +454,9 @@ export default function App() {
       privacyNote: "🔒 Vos notes sont transmises de manière sécurisée et ne sont jamais stockées ni utilisées pour l'entraînement. Ne collez pas de contenu confidentiel.",
       footerTagline: "Économisez 20 minutes par réunion",
       dueLabel: "Échéance :",
+      accessGranted: "Accès accordé",
+      lifetime: "À vie",
+      daysLeft: (n) => `${n} jours restants`,
     },
   };
   const t = T[lang];
@@ -807,7 +816,7 @@ ${notes}`
             </div>
             {isWhitelisted ? (
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(80,200,120,0.1)", border: "1px solid rgba(80,200,120,0.2)", color: "#50c878", fontSize: 11, padding: "5px 12px", borderRadius: 20 }}>
-                ✓ {accessPlan ? accessPlan : "Access granted"}{accessPlan && accessPlan !== "Lifetime" && accessDaysLeft ? ` · ${accessDaysLeft} days left` : accessPlan === "Lifetime" ? " · Lifetime" : ""}
+                ✓ {accessPlan ? (accessPlan === "Lifetime" ? t.lifetime : accessPlan) : t.accessGranted}{accessPlan && accessPlan !== "Lifetime" && accessDaysLeft ? ` · ${t.daysLeft(accessDaysLeft)}` : accessPlan === "Lifetime" ? ` · ${t.lifetime}` : ""}
               </span>
             ) : usesCount < FREE_LIMIT ? (
               <span className={`usage-pill${remainingFree === 1 ? " warn" : ""}`}>
