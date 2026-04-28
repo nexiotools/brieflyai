@@ -327,11 +327,135 @@ export default function App() {
   const [accessDaysLeft, setAccessDaysLeft] = useState(null);
   const [sampleIndex, setSampleIndex] = useState(0);
   const [imagePreview, setImagePreview] = useState(null);
+  const [lang, setLang] = useState("nl");
   const abortRef = useRef(null);
   const fileInputRef = useRef(null);
 
+  const T = {
+    en: {
+      h1a: "Turn messy notes into",
+      h1b: "clear action.",
+      subtitle: "Paste your raw meeting notes. Get a structured summary, action items, and a ready-to-send follow-up email — in seconds. Works in any language.",
+      cardLabel: "Your meeting notes",
+      placeholder: "Paste your raw notes here — or use 📷 Scan notes to photograph handwritten or printed notes. Works in English, Dutch, or any language.",
+      generate: "Generate Debrief",
+      trySample: "Try sample",
+      clear: "Clear",
+      unlock: "🔒 Unlock to Generate",
+      scanning: "Reading...",
+      scan: "Scan notes",
+      analysing: "Analysing your meeting...",
+      cancel: "Cancel",
+      tabSummary: "Summary",
+      tabActions: "Actions",
+      tabEmail: "Follow-up Email",
+      decisionsHeading: "Decisions made",
+      followupsHeading: "Needs follow-up",
+      copyActions: "Copy all actions",
+      copyEmail: "Copy email",
+      newMeeting: "← New meeting",
+      freeLeft: (n) => `${n} free ${n === 1 ? "debrief" : "debriefs"} left`,
+      freeWarn: (n) => `⚠ ${n} free ${n === 1 ? "debrief" : "debriefs"} left`,
+      getAccess: "Get Access from €15",
+      noActions: "No specific action items identified.",
+      errorShort: "Please paste your meeting notes first (at least 30 characters).",
+      errorTimeout: "Request timed out. Please try again.",
+      errorFallback: "Something went wrong. Please try again.",
+      errorParse: "Could not parse response. Please try again.",
+      errorIncomplete: "Incomplete response. Please try again.",
+      upgradeBanner: (
+        <>That was your last free debrief. <strong>Get full access from €15 — one-time payment.</strong></>
+      ),
+      upgradeBtn: "Get access →",
+      privacyNote: "🔒 Your notes are sent securely and are not stored or used for training. Do not paste confidential content.",
+      footerTagline: "Save 20 minutes per meeting",
+      dueLabel: "Due:",
+    },
+    nl: {
+      h1a: "Zet rommelige notities om in",
+      h1b: "heldere acties.",
+      subtitle: "Plak je ruwe vergadernotities. Krijg een gestructureerde samenvatting, actiepunten en een kant-en-klare opvolg-e-mail — in seconden. Werkt in elke taal.",
+      cardLabel: "Jouw vergadernotities",
+      placeholder: "Plak je ruwe notities hier — of gebruik 📷 Scannen om handgeschreven of gedrukte notities te fotograferen.",
+      generate: "Genereer verslag",
+      trySample: "Voorbeeld",
+      clear: "Wissen",
+      unlock: "🔒 Ontgrendelen",
+      scanning: "Lezen...",
+      scan: "Scannen",
+      analysing: "Vergadering analyseren...",
+      cancel: "Annuleren",
+      tabSummary: "Samenvatting",
+      tabActions: "Acties",
+      tabEmail: "Opvolg-e-mail",
+      decisionsHeading: "Genomen beslissingen",
+      followupsHeading: "Openstaande punten",
+      copyActions: "Kopieer alle acties",
+      copyEmail: "Kopieer e-mail",
+      newMeeting: "← Nieuwe vergadering",
+      freeLeft: (n) => `${n} gratis ${n === 1 ? "verslag" : "verslagen"} over`,
+      freeWarn: (n) => `⚠ ${n} gratis ${n === 1 ? "verslag" : "verslagen"} over`,
+      getAccess: "Toegang vanaf €15",
+      noActions: "Geen specifieke actiepunten gevonden.",
+      errorShort: "Plak eerst je vergadernotities (minimaal 30 tekens).",
+      errorTimeout: "Verzoek verlopen. Probeer opnieuw.",
+      errorFallback: "Er ging iets mis. Probeer opnieuw.",
+      errorParse: "Kon reactie niet verwerken. Probeer opnieuw.",
+      errorIncomplete: "Onvolledige reactie. Probeer opnieuw.",
+      upgradeBanner: (
+        <>Dat was je laatste gratis verslag. <strong>Krijg volledige toegang vanaf €15 — eenmalige betaling.</strong></>
+      ),
+      upgradeBtn: "Toegang →",
+      privacyNote: "🔒 Je notities worden veilig verwerkt en nooit opgeslagen of gebruikt voor training. Plak geen vertrouwelijke inhoud.",
+      footerTagline: "Bespaar 20 minuten per vergadering",
+      dueLabel: "Deadline:",
+    },
+    fr: {
+      h1a: "Transformez vos notes en",
+      h1b: "actions claires.",
+      subtitle: "Collez vos notes de réunion brutes. Obtenez un résumé structuré, des actions et un email de suivi — en quelques secondes. Fonctionne dans toutes les langues.",
+      cardLabel: "Vos notes de réunion",
+      placeholder: "Collez vos notes brutes ici — ou utilisez 📷 Scanner pour photographier vos notes manuscrites ou imprimées.",
+      generate: "Générer le compte rendu",
+      trySample: "Exemple",
+      clear: "Effacer",
+      unlock: "🔒 Déverrouiller",
+      scanning: "Lecture...",
+      scan: "Scanner",
+      analysing: "Analyse de votre réunion...",
+      cancel: "Annuler",
+      tabSummary: "Résumé",
+      tabActions: "Actions",
+      tabEmail: "Email de suivi",
+      decisionsHeading: "Décisions prises",
+      followupsHeading: "Sujets à suivre",
+      copyActions: "Copier toutes les actions",
+      copyEmail: "Copier l'email",
+      newMeeting: "← Nouvelle réunion",
+      freeLeft: (n) => `${n} compte${n > 1 ? "s" : ""} rendu${n > 1 ? "s" : ""} gratuit${n > 1 ? "s" : ""} restant${n > 1 ? "s" : ""}`,
+      freeWarn: (n) => `⚠ ${n} compte${n > 1 ? "s" : ""} rendu${n > 1 ? "s" : ""} gratuit${n > 1 ? "s" : ""} restant${n > 1 ? "s" : ""}`,
+      getAccess: "Accès à partir de €15",
+      noActions: "Aucune action spécifique identifiée.",
+      errorShort: "Veuillez d'abord coller vos notes de réunion (au moins 30 caractères).",
+      errorTimeout: "La requête a expiré. Veuillez réessayer.",
+      errorFallback: "Une erreur est survenue. Veuillez réessayer.",
+      errorParse: "Impossible de traiter la réponse. Veuillez réessayer.",
+      errorIncomplete: "Réponse incomplète. Veuillez réessayer.",
+      upgradeBanner: (
+        <>C'était votre dernier compte rendu gratuit. <strong>Accès complet à partir de €15 — paiement unique.</strong></>
+      ),
+      upgradeBtn: "Obtenir l'accès →",
+      privacyNote: "🔒 Vos notes sont transmises de manière sécurisée et ne sont jamais stockées ni utilisées pour l'entraînement. Ne collez pas de contenu confidentiel.",
+      footerTagline: "Économisez 20 minutes par réunion",
+      dueLabel: "Échéance :",
+    },
+  };
+  const t = T[lang];
+
   useEffect(() => {
     try {
+      const savedLang = localStorage.getItem("brieflyai_lang");
+      if (savedLang && ["nl","en","fr"].includes(savedLang)) setLang(savedLang);
       const stored = parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
       setUsesCount(stored);
       const wl = localStorage.getItem(WHITELIST_KEY);
@@ -460,7 +584,7 @@ export default function App() {
 
   const handleGenerate = async () => {
     if (!notes.trim() || notes.trim().length < 30) {
-      setError("Please paste your meeting notes first (at least 30 characters).");
+      setError(t.errorShort);
       return;
     }
     if (isLocked) { openPaywall(); return; }
@@ -517,10 +641,10 @@ ${notes}`
 
       let parsed;
       try { parsed = JSON.parse(clean); }
-      catch { throw new Error("Could not parse response. Please try again."); }
+      catch { throw new Error(t.errorParse); }
 
       if (!parsed.title || !parsed.summary) {
-        throw new Error("Incomplete response. Please try again.");
+        throw new Error(t.errorIncomplete);
       }
 
       setResult(parsed);
@@ -533,9 +657,9 @@ ${notes}`
     } catch (e) {
       clearTimeout(timeout);
       if (e.name === "AbortError") {
-        setError("Request timed out. Please try again.");
+        setError(t.errorTimeout);
       } else {
-        setError(e.message || "Something went wrong. Please try again.");
+        setError(e.message || t.errorFallback);
       }
     } finally {
       setLoading(false);
@@ -558,9 +682,9 @@ ${notes}`
   const reset = () => { setNotes(""); setResult(null); setError(""); };
 
   const tabs = [
-    { key: "summary", label: "Summary" },
-    { key: "actions", label: "Actions" },
-    { key: "email", label: "Follow-up Email" },
+    { key: "summary", label: t.tabSummary },
+    { key: "actions", label: t.tabActions },
+    { key: "email", label: t.tabEmail },
   ];
 
   return (
@@ -666,29 +790,43 @@ ${notes}`
       <div className="container">
         <div className="header">
           <div className="header-top">
-            <div className="badge"><span className="badge-dot" />AI-Powered</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div className="badge"><span className="badge-dot" />AI-Powered</div>
+              <div style={{ display: "flex", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, overflow: "hidden" }}>
+                {["nl","en","fr"].map(l => (
+                  <button key={l} onClick={() => { setLang(l); try { localStorage.setItem("brieflyai_lang", l); } catch {} }} style={{
+                    background: lang === l ? "rgba(255,200,80,0.15)" : "transparent",
+                    border: "none", color: lang === l ? "#ffc850" : "#4a4a50",
+                    fontSize: 11, fontWeight: lang === l ? 600 : 400,
+                    padding: "4px 10px", cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
+                    borderRight: l !== "fr" ? "1px solid rgba(255,255,255,0.08)" : "none",
+                    transition: "all 0.15s"
+                  }}>{l.toUpperCase()}</button>
+                ))}
+              </div>
+            </div>
             {isWhitelisted ? (
               <span style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "rgba(80,200,120,0.1)", border: "1px solid rgba(80,200,120,0.2)", color: "#50c878", fontSize: 11, padding: "5px 12px", borderRadius: 20 }}>
                 ✓ {accessPlan ? accessPlan : "Access granted"}{accessPlan && accessPlan !== "Lifetime" && accessDaysLeft ? ` · ${accessDaysLeft} days left` : accessPlan === "Lifetime" ? " · Lifetime" : ""}
               </span>
             ) : usesCount < FREE_LIMIT ? (
               <span className={`usage-pill${remainingFree === 1 ? " warn" : ""}`}>
-                {remainingFree === 1 ? "⚠ " : ""}{remainingFree} free {remainingFree === 1 ? "debrief" : "debriefs"} left
+                {remainingFree === 1 ? t.freeWarn(remainingFree) : t.freeLeft(remainingFree)}
               </span>
             ) : (
               <button className="access-btn" onClick={openPaywall}>
-                Get Access from €15
+                {t.getAccess}
               </button>
             )}
           </div>
-          <h1>Turn messy notes into<br /><span>clear action.</span></h1>
-          <p className="subtitle">Paste your raw meeting notes. Get a structured summary, action items, and a ready-to-send follow-up email — in seconds. Works in any language.</p>
+          <h1>{t.h1a}<br /><span>{t.h1b}</span></h1>
+          <p className="subtitle">{t.subtitle}</p>
         </div>
 
         {!result && !loading && (
           <div className="card" style={{ animationDelay: "0.1s" }}>
             <div className="card-label">
-              <span>Your meeting notes</span>
+              <span>{t.cardLabel}</span>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 {notes.length > 0 && <span style={{ color: "#3a3a40", fontWeight: 400 }}>{notes.length} chars</span>}
                 {/* Hidden file input */}
@@ -712,7 +850,7 @@ ${notes}`
                     fontFamily: "'DM Sans', sans-serif", opacity: extracting ? 0.5 : 1
                   }}
                 >
-                  📷 {extracting ? "Reading..." : "Scan notes"}
+                  📷 {extracting ? t.scanning : t.scan}
                 </button>
               </div>
             </div>
@@ -746,14 +884,14 @@ ${notes}`
                   width: 16, height: 16, border: "2px solid rgba(255,200,80,0.2)",
                   borderTopColor: "#ffc850", borderRadius: "50%", animation: "spin 0.7s linear infinite", flexShrink: 0
                 }} />
-                <span style={{ color: "#7a7570", fontSize: 13 }}>Reading your handwritten notes...</span>
+                <span style={{ color: "#7a7570", fontSize: 13 }}>{lang === "fr" ? "Lecture de vos notes manuscrites..." : lang === "nl" ? "Notities worden gelezen..." : "Reading your handwritten notes..."}</span>
               </div>
             )}
 
             <textarea
               value={notes}
               onChange={e => setNotes(e.target.value)}
-              placeholder="Paste your raw notes here — or use 📷 Scan notes to photograph handwritten or printed notes. Works in English, Dutch, or any language."
+              placeholder={t.placeholder}
             />
             <div className="btn-row">
               <button
@@ -762,12 +900,12 @@ ${notes}`
                 disabled={!notes.trim() && !isLocked}
               >
                 {isLocked
-                  ? <>🔒 Unlock to Generate</>
-                  : <><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>Generate Debrief</>
+                  ? <>{t.unlock}</>
+                  : <><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>{t.generate}</>
                 }
               </button>
-              <button className="btn-secondary" onClick={loadSample}>Try sample</button>
-              {notes && !isLocked && <button className="btn-secondary" onClick={reset}>Clear</button>}
+              <button className="btn-secondary" onClick={loadSample}>{t.trySample}</button>
+              {notes && !isLocked && <button className="btn-secondary" onClick={reset}>{t.clear}</button>}
             </div>
             {error && (
               <div className="error">
@@ -776,7 +914,7 @@ ${notes}`
               </div>
             )}
             <div className="privacy-note">
-              🔒 Your notes are sent securely and are not stored or used for training. Do not paste confidential content.
+              {t.privacyNote}
             </div>
           </div>
         )}
@@ -784,9 +922,9 @@ ${notes}`
         {loading && (
           <div className="loading-state">
             <div className="spinner" />
-            <p className="loading-text">Analysing your meeting...</p>
+            <p className="loading-text">{t.analysing}</p>
             <button className="loading-cancel" onClick={() => { if (abortRef.current) abortRef.current.abort(); setLoading(false); }}>
-              Cancel
+              {t.cancel}
             </button>
           </div>
         )}
@@ -805,11 +943,11 @@ ${notes}`
                 <div>
                   <p className="summary-text">{result.summary}</p>
                   {result.decisions?.length > 0 && (<>
-                    <p className="section-heading">Decisions made</p>
+                    <p className="section-heading">{t.decisionsHeading}</p>
                     <ul className="decision-list">{result.decisions.map((d, i) => <li key={i}><span className="decision-dot" />{d}</li>)}</ul>
                   </>)}
                   {result.followups?.length > 0 && (<>
-                    <p className="section-heading">Needs follow-up</p>
+                    <p className="section-heading">{t.followupsHeading}</p>
                     <ul className="followup-list">{result.followups.map((f, i) => <li key={i}><span className="followup-arrow">→</span>{f}</li>)}</ul>
                   </>)}
                 </div>
@@ -821,14 +959,14 @@ ${notes}`
                     <div key={i} className="action-card">
                       <div className="action-header">
                         <span className="action-owner">{a.owner}</span>
-                        <span className="action-deadline">Due: {a.deadline}</span>
+                        <span className="action-deadline">{t.dueLabel} {a.deadline}</span>
                       </div>
                       <p className="action-task">{a.task}</p>
                     </div>
-                  )) : <p style={{ color: "#5a5650", fontSize: 14 }}>No specific action items identified.</p>}
+                  )) : <p style={{ color: "#5a5650", fontSize: 14 }}>{t.noActions}</p>}
                   {result.actions?.length > 0 && (
-                    <button className={`copy-btn${copied === "actions" ? " copied" : ""}`} onClick={() => copyToClipboard(result.actions.map(a => `${a.owner}: ${a.task} (Due: ${a.deadline})`).join("\n"), "actions")}>
-                      {copied === "actions" ? "✓ Copied" : "Copy all actions"}
+                    <button className={`copy-btn${copied === "actions" ? " copied" : ""}`} onClick={() => copyToClipboard(result.actions.map(a => `${a.owner}: ${a.task} (${t.dueLabel} ${a.deadline})`).join("\n"), "actions")}>
+                      {copied === "actions" ? "✓ Copied" : t.copyActions}
                     </button>
                   )}
                 </div>
@@ -842,7 +980,7 @@ ${notes}`
                   </div>
                   <div className="email-body">{result.email.body}</div>
                   <button className={`copy-btn${copied === "email" ? " copied" : ""}`} onClick={() => copyToClipboard(`Subject: ${result.email.subject}\n\n${result.email.body}`, "email")}>
-                    {copied === "email" ? "✓ Copied" : "Copy email"}
+                    {copied === "email" ? "✓ Copied" : t.copyEmail}
                   </button>
                 </div>
               )}
@@ -850,23 +988,21 @@ ${notes}`
 
             {usesCount >= FREE_LIMIT && (
               <div className="upgrade-banner">
-                <p className="upgrade-banner-text">
-                  <strong>That was your last free debrief.</strong> Get full access from €15 — one-time payment.
-                </p>
+                <p className="upgrade-banner-text">{t.upgradeBanner}</p>
                 <button className="upgrade-banner-btn" onClick={openPaywall}>
-                  Get access →
+                  {t.upgradeBtn}
                 </button>
               </div>
             )}
 
-            <button className="try-again-btn" onClick={reset}>← New meeting</button>
+            <button className="try-again-btn" onClick={reset}>{t.newMeeting}</button>
           </div>
         )}
 
         <div className="footer">
-          <p>BrieflyAI by <a href="https://nexiotools.nl" target="_blank" rel="noopener noreferrer">nexiotools.nl</a> &mdash; Save 20 minutes per meeting</p>
+          <p>BrieflyAI by <a href="https://nexiotools.nl" target="_blank" rel="noopener noreferrer">nexiotools.nl</a> &mdash; {t.footerTagline}</p>
           <p style={{ fontSize: 11, color: "rgba(240,236,232,0.3)", marginTop: 6 }}>
-            Your content is processed securely and never stored. &nbsp;
+            {lang === "fr" ? "Votre contenu est traité de manière sécurisée et n'est jamais stocké." : lang === "nl" ? "Je inhoud wordt veilig verwerkt en nooit opgeslagen." : "Your content is processed securely and never stored."} &nbsp;
             <a href="https://nexiotools.nl/privacy.html" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(240,236,232,0.3)" }}>Privacy Policy</a>
             &nbsp;·&nbsp;
             <a href="https://nexiotools.nl/terms.html" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(240,236,232,0.3)" }}>Terms of Service</a>
