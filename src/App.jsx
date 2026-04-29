@@ -800,7 +800,10 @@ ${notes}`
         <div className="header">
           <div className="header-top">
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div className="badge"><span className="badge-dot" />AI-Powered</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="32" height="32" rx="7" fill="#13131a"/><rect x="6" y="6" width="5" height="20" rx="1.4" fill="white"/><rect x="21" y="6" width="5" height="20" rx="1.4" fill="white"/><polygon points="11,6 16,6 26,26 21,26" fill="#ffc850"/></svg>
+                <span style={{ fontFamily: "Syne, sans-serif", fontSize: 14, fontWeight: 800, letterSpacing: "-0.01em", color: "#f0ece8" }}>BrieflyAI</span>
+              </div>
               <div style={{ display: "flex", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, overflow: "hidden" }}>
                 {["nl","en","fr"].map(l => (
                   <button key={l} onClick={() => { setLang(l); try { localStorage.setItem("brieflyai_lang", l); } catch {} }} style={{
