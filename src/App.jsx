@@ -353,6 +353,7 @@ export default function App() {
       followupsHeading: "Needs follow-up",
       copyActions: "Copy all actions",
       copyEmail: "Copy email",
+      openMailApp: "Open in mail app",
       newMeeting: "← New meeting",
       freeLeft: (n) => `${n} free ${n === 1 ? "debrief" : "debriefs"} left`,
       freeWarn: (n) => `⚠ ${n} free ${n === 1 ? "debrief" : "debriefs"} left`,
@@ -395,6 +396,7 @@ export default function App() {
       followupsHeading: "Openstaande punten",
       copyActions: "Kopieer alle acties",
       copyEmail: "Kopieer e-mail",
+      openMailApp: "Open in mail app",
       newMeeting: "← Nieuwe vergadering",
       freeLeft: (n) => `${n} gratis ${n === 1 ? "verslag" : "verslagen"} over`,
       freeWarn: (n) => `⚠ ${n} gratis ${n === 1 ? "verslag" : "verslagen"} over`,
@@ -437,6 +439,7 @@ export default function App() {
       followupsHeading: "Sujets à suivre",
       copyActions: "Copier toutes les actions",
       copyEmail: "Copier l'email",
+      openMailApp: "Ouvrir dans l'application mail",
       newMeeting: "← Nouvelle réunion",
       freeLeft: (n) => `${n} compte${n > 1 ? "s" : ""} rendu${n > 1 ? "s" : ""} gratuit${n > 1 ? "s" : ""} restant${n > 1 ? "s" : ""}`,
       freeWarn: (n) => `⚠ ${n} compte${n > 1 ? "s" : ""} rendu${n > 1 ? "s" : ""} gratuit${n > 1 ? "s" : ""} restant${n > 1 ? "s" : ""}`,
@@ -991,9 +994,18 @@ ${notes}`
                     <div className="email-subject-text">{result.email.subject}</div>
                   </div>
                   <div className="email-body">{result.email.body}</div>
-                  <button className={`copy-btn${copied === "email" ? " copied" : ""}`} onClick={() => copyToClipboard(`Subject: ${result.email.subject}\n\n${result.email.body}`, "email")}>
-                    {copied === "email" ? "✓ Copied" : t.copyEmail}
-                  </button>
+                  <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 12 }}>
+                    <button className={`copy-btn${copied === "email" ? " copied" : ""}`} onClick={() => copyToClipboard(`Subject: ${result.email.subject}\n\n${result.email.body}`, "email")}>
+                      {copied === "email" ? "✓ Copied" : t.copyEmail}
+                    </button>
+                    <button className="copy-btn" onClick={() => {
+                      const subject = encodeURIComponent(result.email.subject);
+                      const body = encodeURIComponent(result.email.body);
+                      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+                    }}>
+                      ✉ {t.openMailApp}
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
