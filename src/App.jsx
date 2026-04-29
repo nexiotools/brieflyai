@@ -396,7 +396,7 @@ export default function App() {
       followupsHeading: "Openstaande punten",
       copyActions: "Kopieer alle acties",
       copyEmail: "Kopieer e-mail",
-      openMailApp: "Open in mail app",
+      openMailApp: "Openen in mail-app",
       newMeeting: "← Nieuwe vergadering",
       freeLeft: (n) => `${n} gratis ${n === 1 ? "verslag" : "verslagen"} over`,
       freeWarn: (n) => `⚠ ${n} gratis ${n === 1 ? "verslag" : "verslagen"} over`,
@@ -439,7 +439,7 @@ export default function App() {
       followupsHeading: "Sujets à suivre",
       copyActions: "Copier toutes les actions",
       copyEmail: "Copier l'email",
-      openMailApp: "Ouvrir dans l'application mail",
+      openMailApp: "Ouvrir dans l'app mail",
       newMeeting: "← Nouvelle réunion",
       freeLeft: (n) => `${n} compte${n > 1 ? "s" : ""} rendu${n > 1 ? "s" : ""} gratuit${n > 1 ? "s" : ""} restant${n > 1 ? "s" : ""}`,
       freeWarn: (n) => `⚠ ${n} compte${n > 1 ? "s" : ""} rendu${n > 1 ? "s" : ""} gratuit${n > 1 ? "s" : ""} restant${n > 1 ? "s" : ""}`,
@@ -994,17 +994,13 @@ ${notes}`
                     <div className="email-subject-text">{result.email.subject}</div>
                   </div>
                   <div className="email-body">{result.email.body}</div>
-                  <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 12 }}>
+                  <div style={{ display: "flex", gap: 8, marginTop: 12, justifyContent: "flex-end" }}>
                     <button className={`copy-btn${copied === "email" ? " copied" : ""}`} onClick={() => copyToClipboard(`Subject: ${result.email.subject}\n\n${result.email.body}`, "email")}>
                       {copied === "email" ? "✓ Copied" : t.copyEmail}
                     </button>
-                    <button className="copy-btn" onClick={() => {
-                      const subject = encodeURIComponent(result.email.subject);
-                      const body = encodeURIComponent(result.email.body);
-                      window.location.href = `mailto:?subject=${subject}&body=${body}`;
-                    }}>
+                    <a className="copy-btn" href={`mailto:?subject=${encodeURIComponent(result.email.subject)}&body=${encodeURIComponent(result.email.body)}`} style={{ textDecoration: "none" }}>
                       ✉ {t.openMailApp}
-                    </button>
+                    </a>
                   </div>
                 </div>
               )}
