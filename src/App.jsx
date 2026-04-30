@@ -13,7 +13,7 @@ const SAMPLE_NOTES = [
 
 Attendees: Lisa (Sales Manager), Tom (Account Exec), Mira (Marketing)
 
-Pipeline is at €420k, down from €510k last quarter. Tom lost the Retail Corp deal due to pricing -- competitor came in 15% cheaper. Lisa wants a pricing review before end of month. Mira confirmed LinkedIn campaign starts next week, budget €3k.
+Pipeline is at €420k, down from €510k last quarter. Tom lost the Retail Corp deal due to pricing: competitor came in 15% cheaper. Lisa wants a pricing review before end of month. Mira confirmed LinkedIn campaign starts next week, budget €3k.
 
 Agreed: Tom to follow up on 3 warm leads by Friday. Lisa to propose revised pricing tiers by April 25. Mira to share campaign brief with team before launch.
 
@@ -23,9 +23,9 @@ Next QBR scheduled for July.`,
 
 Attendees: Yara (HR), Daan (IT), Sophie (Office Manager)
 
-Two new starters joining May 1st: Farrukh (Dev) and Elena (Marketing). IT needs laptop orders placed by April 22 -- Daan to handle. Office badges need activating 2 days before start. Sophie will arrange desk setup and welcome pack.
+Two new starters joining May 1st: Farrukh (Dev) and Elena (Marketing). IT needs laptop orders placed by April 22, Daan to handle. Office badges need activating 2 days before start. Sophie will arrange desk setup and welcome pack.
 
-Buddy system discussed -- Yara to assign buddies by April 24. Onboarding schedule still being finalised, Yara sends draft to Sophie by April 23.
+Buddy system discussed: Yara to assign buddies by April 24. Onboarding schedule still being finalised, Yara sends draft to Sophie by April 23.
 
 Open question: remote work policy for first 3 months still unclear, HR director to confirm.`,
 
@@ -35,7 +35,7 @@ Attendees: Marc (CEO), Jess (CFO), Robin (COO)
 
 Q1 revenue came in at €1.2M, slightly below target of €1.3M. CFO flagged cash position is healthy. Two cost-saving measures approved: freeze on external consultants, and office lease renegotiation starting next month.
 
-COO raised operational bottleneck in logistics -- third-party courier delays affecting customer satisfaction. Decision: evaluate alternative couriers by May 15.
+COO raised operational bottleneck in logistics: third-party courier delays affecting customer satisfaction. Decision: evaluate alternative couriers by May 15.
 
 CEO wants monthly all-hands reinstated starting May. Jess to send calendar invite to full team.`
 ];
@@ -140,7 +140,7 @@ function PaywallModal({ onClose, onWhitelisted }) {
         </div>
 
         <h2 style={{
-          fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 700,
+          fontFamily: "Playfair Display, serif", fontSize: 24, fontWeight: 700,
           color: "#f0ece2", marginBottom: 10, lineHeight: 1.2
         }}>You've used your 2 free debriefs</h2>
 
@@ -155,7 +155,7 @@ function PaywallModal({ onClose, onWhitelisted }) {
             "Ready-to-send follow-up emails",
             "Works in any language",
             "Works for any type of meeting",
-            "One-time payment — no recurring charges",
+            "One-time payment, no recurring charges",
           ].map((f, i) => (
             <div key={i} style={{
               display: "flex", alignItems: "center", gap: 10, padding: "7px 0",
@@ -175,10 +175,10 @@ function PaywallModal({ onClose, onWhitelisted }) {
           textDecoration: "none"
         }}>
           <div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500 }}>Starter — 3 Months</div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: "#5a5650" }}>One-time payment</div>
+            <div style={{ fontFamily: "DM Sans, sans-serif", fontSize: 13, fontWeight: 500 }}>Starter: 3 Months</div>
+            <div style={{ fontFamily: "DM Sans, sans-serif", fontSize: 11, fontWeight: 300, color: "#5a5650" }}>One-time payment</div>
           </div>
-          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: "#c8c4bc" }}>€15</div>
+          <div style={{ fontFamily: "Playfair Display, serif", fontSize: 20, fontWeight: 700, color: "#c8c4bc" }}>€15</div>
         </a>
 
         <a href={CHECKOUT_URL_PRO} target="_blank" rel="noopener noreferrer" style={{
@@ -196,10 +196,10 @@ function PaywallModal({ onClose, onWhitelisted }) {
             padding: "2px 8px", borderRadius: 4, textTransform: "uppercase"
           }}>Most popular</div>
           <div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700 }}>Pro — 1 Year</div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 400, opacity: 0.65 }}>One-time payment · €3.25/month</div>
+            <div style={{ fontFamily: "DM Sans, sans-serif", fontSize: 14, fontWeight: 700 }}>Pro: 1 Year</div>
+            <div style={{ fontFamily: "DM Sans, sans-serif", fontSize: 11, fontWeight: 400, opacity: 0.65 }}>One-time payment · €3.25/month</div>
           </div>
-          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700 }}>€39</div>
+          <div style={{ fontFamily: "Playfair Display, serif", fontSize: 22, fontWeight: 700 }}>€39</div>
         </a>
 
         <a href={CHECKOUT_URL_LIFETIME} target="_blank" rel="noopener noreferrer" style={{
@@ -210,22 +210,22 @@ function PaywallModal({ onClose, onWhitelisted }) {
           textDecoration: "none"
         }}>
           <div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600 }}>Lifetime Access</div>
-            <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 300, color: "#7a7570" }}>Pay once, use forever</div>
+            <div style={{ fontFamily: "DM Sans, sans-serif", fontSize: 13, fontWeight: 600 }}>Lifetime Access</div>
+            <div style={{ fontFamily: "DM Sans, sans-serif", fontSize: 11, fontWeight: 300, color: "#7a7570" }}>Pay once, use forever</div>
           </div>
-          <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: "#ffc850" }}>€79</div>
+          <div style={{ fontFamily: "Playfair Display, serif", fontSize: 20, fontWeight: 700, color: "#ffc850" }}>€79</div>
         </a>
 
         <p style={{ textAlign: "center", color: "#3a3a40", fontSize: 11 }}>
           Secure checkout · Lemon Squeezy · VAT included
         </p>
 
-        {/* Already paid -- enter email */}
+        {/* Already paid: enter email */}
         <div style={{ marginTop: 16, borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 16 }}>
           {!showEmailEntry ? (
             <button onClick={() => { setShowEmailEntry(true); setShowCodeEntry(false); }} style={{
               background: "transparent", border: "none", color: "#7a7570",
-              fontSize: 12, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
+              fontSize: 12, cursor: "pointer", fontFamily: "DM Sans, sans-serif",
               textDecoration: "underline", display: "block", margin: "0 auto", padding: "4px 0"
             }}>
               Already paid? Enter your email to unlock
@@ -245,7 +245,7 @@ function PaywallModal({ onClose, onWhitelisted }) {
                     flex: 1, background: "rgba(255,255,255,0.05)",
                     border: `1px solid ${emailStatus === "error" || emailStatus === "expired" ? "rgba(255,80,80,0.4)" : emailStatus === "success" ? "rgba(80,200,120,0.4)" : "rgba(255,255,255,0.1)"}`,
                     borderRadius: 8, padding: "10px 14px", color: "#f0ece2",
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: "none"
+                    fontFamily: "DM Sans, sans-serif", fontSize: 13, outline: "none"
                   }}
                 />
                 <button onClick={handleValidateEmail}
@@ -255,7 +255,7 @@ function PaywallModal({ onClose, onWhitelisted }) {
                     border: `1px solid ${emailStatus === "success" ? "rgba(80,200,120,0.3)" : "rgba(255,200,80,0.3)"}`,
                     color: emailStatus === "success" ? "#50c878" : "#ffc850",
                     borderRadius: 8, padding: "10px 16px", cursor: "pointer",
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap"
+                    fontFamily: "DM Sans, sans-serif", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap"
                   }}>
                   {emailStatus === "checking" ? "..." : emailStatus === "success" ? "✓" : "Unlock"}
                 </button>
@@ -271,7 +271,7 @@ function PaywallModal({ onClose, onWhitelisted }) {
         {!showCodeEntry ? (
           <button onClick={() => { setShowCodeEntry(true); setShowEmailEntry(false); }} style={{
             background: "transparent", border: "none", color: "#3a3a40",
-            fontSize: 11, cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
+            fontSize: 11, cursor: "pointer", fontFamily: "DM Sans, sans-serif",
             textDecoration: "underline", display: "block", margin: "8px auto 0", padding: "4px 0"
           }}>
             Have an access code?
@@ -288,7 +288,7 @@ function PaywallModal({ onClose, onWhitelisted }) {
                   flex: 1, background: "rgba(255,255,255,0.05)",
                   border: `1px solid ${codeStatus === "error" ? "rgba(255,80,80,0.4)" : codeStatus === "success" ? "rgba(80,200,120,0.4)" : "rgba(255,255,255,0.1)"}`,
                   borderRadius: 8, padding: "10px 14px", color: "#f0ece2",
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: "none"
+                  fontFamily: "DM Sans, sans-serif", fontSize: 13, outline: "none"
                 }}
               />
               <button onClick={handleValidateCode}
@@ -298,7 +298,7 @@ function PaywallModal({ onClose, onWhitelisted }) {
                   border: `1px solid ${codeStatus === "success" ? "rgba(80,200,120,0.3)" : "rgba(255,200,80,0.3)"}`,
                   color: codeStatus === "success" ? "#50c878" : "#ffc850",
                   borderRadius: 8, padding: "10px 16px", cursor: "pointer",
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap"
+                  fontFamily: "DM Sans, sans-serif", fontSize: 13, fontWeight: 600, whiteSpace: "nowrap"
                 }}>
                 {codeStatus === "checking" ? "..." : codeStatus === "success" ? "✓" : "Apply"}
               </button>
@@ -365,7 +365,7 @@ export default function App() {
       errorParse: "Could not parse response. Please try again.",
       errorIncomplete: "Incomplete response. Please try again.",
       upgradeBanner: (
-        <>That was your last free debrief. <strong>Get full access from €15 — one-time payment.</strong></>
+        <>That was your last free debrief. <strong>Get full access from €15, one-time payment.</strong></>
       ),
       upgradeBtn: "Get access →",
       privacyNote: "🔒 Your notes are sent securely and are not stored or used for training. Do not paste confidential content.",
@@ -408,7 +408,7 @@ export default function App() {
       errorParse: "Kon reactie niet verwerken. Probeer opnieuw.",
       errorIncomplete: "Onvolledige reactie. Probeer opnieuw.",
       upgradeBanner: (
-        <>Dat was je laatste gratis verslag. <strong>Krijg volledige toegang vanaf €15 — eenmalige betaling.</strong></>
+        <>Dat was je laatste gratis verslag. <strong>Krijg volledige toegang vanaf €15, eenmalige betaling.</strong></>
       ),
       upgradeBtn: "Toegang →",
       privacyNote: "🔒 Je notities worden veilig verwerkt en nooit opgeslagen of gebruikt voor training. Plak geen vertrouwelijke inhoud.",
@@ -451,7 +451,7 @@ export default function App() {
       errorParse: "Impossible de traiter la réponse. Veuillez réessayer.",
       errorIncomplete: "Réponse incomplète. Veuillez réessayer.",
       upgradeBanner: (
-        <>C'était votre dernier compte rendu gratuit. <strong>Accès complet à partir de €15 — paiement unique.</strong></>
+        <>C'était votre dernier compte rendu gratuit. <strong>Accès complet à partir de €15, paiement unique.</strong></>
       ),
       upgradeBtn: "Obtenir l'accès →",
       privacyNote: "🔒 Vos notes sont transmises de manière sécurisée et ne sont jamais stockées ni utilisées pour l'entraînement. Ne collez pas de contenu confidentiel.",
@@ -465,6 +465,13 @@ export default function App() {
   const t = T[lang];
 
   useEffect(() => {
+    if (!document.getElementById("brieflyai-fonts")) {
+      const link = document.createElement("link");
+      link.id = "brieflyai-fonts";
+      link.rel = "stylesheet";
+      link.href = "https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap";
+      document.head.appendChild(link);
+    }
     try {
       const savedLang = localStorage.getItem("brieflyai_lang");
       if (savedLang && ["nl","en","fr"].includes(savedLang)) setLang(savedLang);
@@ -700,14 +707,14 @@ ${notes}`
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0c0c0e", fontFamily: "'DM Sans', sans-serif", color: "#e8e4dc", position: "relative", overflow: "hidden" }}>
+    <div style={{ minHeight: "100vh", background: "#0c0c0e", fontFamily: "DM Sans, sans-serif", color: "#e8e4dc", position: "relative", overflow: "hidden" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap');
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #2a2a30; border-radius: 2px; }
-        .grain { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.4; }
+        .grain { display: none; }
         .glow-orb { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
         .container { max-width: 780px; margin: 0 auto; padding: 0 24px 80px; position: relative; z-index: 1; }
         .header { padding: 56px 0 40px; animation: fadeUp 0.6s ease both; }
@@ -813,7 +820,7 @@ ${notes}`
                     background: lang === l ? "rgba(255,200,80,0.15)" : "transparent",
                     border: "none", color: lang === l ? "#ffc850" : "#4a4a50",
                     fontSize: 11, fontWeight: lang === l ? 600 : 400,
-                    padding: "4px 10px", cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
+                    padding: "4px 10px", cursor: "pointer", fontFamily: "DM Sans, sans-serif",
                     borderRight: l !== "fr" ? "1px solid rgba(255,255,255,0.08)" : "none",
                     transition: "all 0.15s"
                   }}>{l.toUpperCase()}</button>
@@ -862,7 +869,7 @@ ${notes}`
                     background: "rgba(255,200,80,0.08)", border: "1px solid rgba(255,200,80,0.2)",
                     color: "#ffc850", fontSize: 11, fontWeight: 500,
                     padding: "4px 10px", borderRadius: 12, cursor: "pointer",
-                    fontFamily: "'DM Sans', sans-serif", opacity: extracting ? 0.5 : 1
+                    fontFamily: "DM Sans, sans-serif", opacity: extracting ? 0.5 : 1
                   }}
                 >
                   📷 {extracting ? t.scanning : t.scan}
